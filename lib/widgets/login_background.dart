@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 
+
 class LoginBackground extends StatelessWidget {
+  final Widget child;
    
-  const LoginBackground({Key? key}) : super(key: key);
+  const LoginBackground({Key? key, required this.child}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -13,11 +14,30 @@ class LoginBackground extends StatelessWidget {
       height: double.infinity,
       child: Stack(
         children: [
-          _PurpleBackground()
+          _PurpleBackground(),
+          _IconLogin(),
+          this.child
         ],
       ),
     ),
     );
+  }
+}
+
+class _IconLogin extends StatelessWidget {
+  const _IconLogin({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        margin: EdgeInsets.only(top: 30),
+        width: double.infinity,
+        child: Icon(Icons.person_pin, color: Colors.white, size: 100),
+      )
+      );
   }
 }
 
