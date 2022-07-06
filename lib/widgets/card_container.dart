@@ -2,8 +2,9 @@
 import 'package:flutter/material.dart';
 
 class CardContainer extends StatelessWidget {
+  final Widget child;
    
-  const CardContainer({Key? key}) : super(key: key);
+  const CardContainer({Key? key, required this.child}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -11,16 +12,22 @@ class CardContainer extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
           width: double.infinity,
-          height: 300,
-          
-          decoration: _DecorationCard(),
-          child: Center(child: Text('Login', style: TextStyle(fontSize: 30),)),
+          padding: const EdgeInsets.all(20),
+          decoration: _decorationCard(),
+          child: this.child,
       ),
     );
   }
 
-  BoxDecoration _DecorationCard() => BoxDecoration(
+  BoxDecoration _decorationCard() =>  BoxDecoration(
     borderRadius: BorderRadius.circular(25),
     color: Colors.white,
+    boxShadow: const [
+      BoxShadow(
+        color: Colors.black12,
+        blurRadius: 15,
+        offset: Offset(0, 5)
+      )
+    ]
   );
 }
