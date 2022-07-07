@@ -11,7 +11,4 @@ class RouteModel{
     required this.icon,
     required this.name,
     required this.screen});
-
-
-
 }
