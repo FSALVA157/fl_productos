@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:fl_productos/themes/global_theme.dart';
+import 'package:fl_productos/ui/input_decorations.dart';
 import 'package:fl_productos/widgets/widget.dart';
 import 'package:fl_productos/widgets/login_background.dart';
 import 'package:flutter/material.dart';
@@ -51,20 +52,12 @@ class _LoginForm extends StatelessWidget {
             TextFormField(
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.deepPurple)
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                    color: Colors.deepPurple,
-                    width: 2
-                  ),                  
-                ),
-                hintText: 'john.doe@gmai.com',
-                labelText: 'Correo Electronico',
-                prefixIcon: Icon(Icons.alternate_email_sharp, color: Colors.deepPurple,)
-              ),
+              decoration: InputDecorations.authInputDecoration(
+                icono: Icon(Icons.alternate_email_sharp,
+                color: Colors.deepPurple,),
+                hint_text: 'john.doe@gmail.com',
+                label_text: 'Correo Electronico'
+                )
             )
           ],
         )
