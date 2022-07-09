@@ -6,20 +6,20 @@ class InputDecorations{
 
   // InputDecorations({required this.icono});
 
-  static InputDecoration authInputDecoration({required Icon icono, required String hintText}){
+  static InputDecoration authInputDecoration({required IconData icono, required String hint_text, required label_text}){
     return  InputDecoration(
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.deepPurple)
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     color: Colors.deepPurple,
                     width: 2
                   ),                  
                 ),
-                hintText: 'john.doe@gmail.com',
-                labelText: 'Correo Electronico',
-                prefixIcon: icono
+                hintText: hint_text,
+                labelText: label_text,
+                prefixIcon: (icono != null)? Icon(icono, color: Colors.deepPurple,): null
               );
   }
 }
