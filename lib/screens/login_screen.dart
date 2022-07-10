@@ -1,10 +1,12 @@
 import 'dart:ui';
 
+import 'package:fl_productos/provider/login_form_provider.dart';
 import 'package:fl_productos/themes/global_theme.dart';
 import 'package:fl_productos/ui/input_decorations.dart';
 import 'package:fl_productos/widgets/widget.dart';
 import 'package:fl_productos/widgets/login_background.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
    
@@ -25,7 +27,11 @@ class LoginScreen extends StatelessWidget {
                                   SizedBox(height: 10,),
                                   Text('Login', style: Theme.of(context).textTheme.headline5,),
                                   SizedBox(height: 30,),
-                                  _LoginForm()
+                                  ChangeNotifierProvider(
+                                    create: (_) => LoginFormProvider(),
+                                    child: _LoginForm(),
+                                    )
+                                  
                                 ],
                               ),
                             ),
@@ -47,8 +53,12 @@ class _LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loginFormProvider = Provider.of<LoginFormProvider>(context);
+
     return Container(
       child: Form(
+        key: loginFormProvider.formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
           children: [
             TextFormField(
@@ -58,7 +68,15 @@ class _LoginForm extends StatelessWidget {
                 icono: Icons.alternate_email_sharp,
                 hint_text: 'john.doe@gmail.com',
                 label_text: 'Correo Electronico'
-                )
+                ),
+                validator: (value){
+                  String pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                  RegExp regExp  = new RegExp(pattern);
+                  return (regExp.hasMatch(value ?? ''))? null: "El email no es válido";
+                },
+                onChanged: (value){
+                    loginFormProvider.email = value;
+                },
             ),
             SizedBox(height: 30,),
             TextFormField(
@@ -69,7 +87,11 @@ class _LoginForm extends StatelessWidget {
                 icono: Icons.lock_outline,
                 hint_text: '****',
                 label_text: 'Password'
-                )
+                ),
+              validator: (value){
+                return (value != null && value.length > 5)? null: "la contraseña no es válida";
+              },
+              onChanged: (value)=>loginFormProvider.password = value,
             ),
             SizedBox(height: 40,),
             MaterialButton(
@@ -82,7 +104,11 @@ class _LoginForm extends StatelessWidget {
               child: Text('Ingresar', style: TextStyle(color: Colors.white),),
               padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
               onPressed: (){
-
+                    if(loginFormProvider.isValid()){
+                        Navigator.pushReplacementNamed(context, 'home');
+                    }else{
+                      return;
+                    }
               })           
           ],
         )
