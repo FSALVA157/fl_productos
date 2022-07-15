@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class AppRoutes{
 
-  static const initialRoute = "login";
+  static const initialRoute = "home";
 
   static final optionsMenu = <RouteModel>[
     RouteModel(route: 'home', icon: Icons.home , name: 'Home Screen', screen: const HomeScreen()),

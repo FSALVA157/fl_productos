@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GlobalTheme{
-  static final primary = Colors.green[700];
+  static final primary = Colors.deepPurple;
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     primaryColor: primary,
     scaffoldBackgroundColor: Colors.grey[300],
@@ -14,5 +14,9 @@ class GlobalTheme{
         primary: primary
       )
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: primary
+    )
+    
   );
 }

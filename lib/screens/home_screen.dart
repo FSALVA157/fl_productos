@@ -1,3 +1,4 @@
+import 'package:fl_productos/widgets/widget.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,11 +9,19 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: Center(child: Text("Home Screen")),
+        title: Center(child: Text("Productos")),
       ),
-      body: Center(
-         child: Text('HomeScreen'),
-      ),
+      body: ListView.builder(
+
+        itemBuilder: (BuildContext context, int indice){
+          return ProductCard();
+        }
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){},
+          child: Icon(Icons.add)
+          
+        ),
     );
   }
 }

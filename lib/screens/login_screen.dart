@@ -101,10 +101,16 @@ class _LoginForm extends StatelessWidget {
               color: Colors.deepPurple,
               elevation: 0,
               disabledColor: Colors.grey,
-              child: Text('Ingresar', style: TextStyle(color: Colors.white),),
+              child: (loginFormProvider.isLoading)?
+                          Text('Espere por favor', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),)
+                        :Text('Ingresar', style: TextStyle(color: Colors.white),),
               padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-              onPressed: (){
-                    if(loginFormProvider.isValid()){
+              onPressed: (loginFormProvider.isLoading)? null
+                  : ()async{
+                    FocusScope.of(context).unfocus();
+                    if(loginFormProvider.isValid()) {
+                        loginFormProvider.isLoading = true;
+                        await Future.delayed(Duration(seconds: 2));
                         Navigator.pushReplacementNamed(context, 'home');
                     }else{
                       return;
