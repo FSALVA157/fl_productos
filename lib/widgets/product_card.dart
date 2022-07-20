@@ -16,14 +16,18 @@ class ProductCard extends StatelessWidget {
         height: 400,
          child: Stack(
            alignment: Alignment.bottomLeft,
-           children: const [
+           children:  [
              _BackgroundImage(),
               _ProductDetail(),
               Positioned(
                 top: 0,
                 right: 0,
-                child: _Prize())
-              
+                child: _Prize()),
+              Positioned(
+                top:0,
+                left: 0,
+                child: _NotAvailable()
+                )              
            ],
          )
       ),
@@ -43,6 +47,29 @@ class ProductCard extends StatelessWidget {
   );
 }
 
+class _NotAvailable extends StatelessWidget {
+  const _NotAvailable({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          child:  Text('No Disponible', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center)
+          ),
+          ),
+       decoration: BoxDecoration(
+        color: Colors.yellow[800],
+        borderRadius: BorderRadius.only(bottomRight: Radius.circular(25), topLeft: Radius.circular(25))
+      ),
+         );
+  }
+}
+
 class _Prize extends StatelessWidget {
   const _Prize({
     Key? key,
@@ -59,6 +86,10 @@ class _Prize extends StatelessWidget {
         color: GlobalTheme.primary,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(25), topRight: Radius.circular(25))
       ),
+      child: FittedBox(
+        fit: BoxFit.contain,
+        child: Text('\$100582.99', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center)),
+      padding: EdgeInsets.symmetric(vertical: 15),
     );
   }
 }

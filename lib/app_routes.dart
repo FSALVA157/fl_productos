@@ -1,4 +1,5 @@
 import 'package:fl_productos/models/models.dart';
+import 'package:fl_productos/screens/product_screen.dart';
 import 'package:fl_productos/screens/screens.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class AppRoutes{
   static final optionsMenu = <RouteModel>[
     RouteModel(route: 'home', icon: Icons.home , name: 'Home Screen', screen: const HomeScreen()),
     RouteModel(route: 'login', icon: Icons.login , name: 'Login Screen', screen: const LoginScreen()),
+    RouteModel(route: 'product', icon: Icons.login , name: 'Product Screen', screen: const ProductScreen()),
   ];
 
   static Map<String, Widget Function(BuildContext)> getAppRoutes(){

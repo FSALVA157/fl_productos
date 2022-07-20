@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class GlobalTheme{
-  static final primary = Colors.deepPurple;
+  static final primary = Colors.blueGrey;
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     primaryColor: primary,
     scaffoldBackgroundColor: Colors.grey[300],
