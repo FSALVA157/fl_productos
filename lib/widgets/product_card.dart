@@ -1,9 +1,10 @@
+import 'package:fl_productos/models/models.dart';
 import 'package:fl_productos/themes/global_theme.dart';
 import 'package:flutter/material.dart';
 
 class ProductCard extends StatelessWidget {
-   
-  const ProductCard({Key? key}) : super(key: key);
+  final IProduct producto;
+  const ProductCard({Key? key, required this.producto}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
@@ -17,16 +18,16 @@ class ProductCard extends StatelessWidget {
          child: Stack(
            alignment: Alignment.bottomLeft,
            children:  [
-             _BackgroundImage(),
-              _ProductDetail(),
+             _BackgroundImage(url_imagen: this.producto.picture),
+              _ProductDetail(prod: producto),
               Positioned(
                 top: 0,
                 right: 0,
-                child: _Prize()),
+                child: _Prize(precio: this.producto.price.toString(),)),
               Positioned(
                 top:0,
                 left: 0,
-                child: _NotAvailable()
+                child: (this.producto.available)? Container(): _NotAvailable()
                 )              
            ],
          )
@@ -71,8 +72,9 @@ class _NotAvailable extends StatelessWidget {
 }
 
 class _Prize extends StatelessWidget {
+  final String precio;
   const _Prize({
-    Key? key,
+    Key? key, required this.precio,
   }) : super(key: key);
 
   @override
@@ -88,15 +90,16 @@ class _Prize extends StatelessWidget {
       ),
       child: FittedBox(
         fit: BoxFit.contain,
-        child: Text('\$100582.99', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center)),
+        child: Text('\$${this.precio}', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20), textAlign: TextAlign.center)),
       padding: EdgeInsets.symmetric(vertical: 15),
     );
   }
 }
 
 class _ProductDetail extends StatelessWidget {
+  final IProduct prod;
   const _ProductDetail({
-    Key? key,
+    Key? key, required this.prod,
   }) : super(key: key);
 
   @override
@@ -113,8 +116,8 @@ class _ProductDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Disco Duro G', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,),
-            Text('Disco Duro G', style: TextStyle(color: Colors.white, fontSize: 15 ),maxLines: 1, overflow: TextOverflow.ellipsis,),
+            Text(this.prod.name, style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),maxLines: 1, overflow: TextOverflow.ellipsis,),
+            Text(this.prod.name, style: TextStyle(color: Colors.white, fontSize: 15 ),maxLines: 1, overflow: TextOverflow.ellipsis,),
           ],
         ),
       ),
@@ -123,8 +126,10 @@ class _ProductDetail extends StatelessWidget {
 }
 
 class _BackgroundImage extends StatelessWidget {
+  final String? url_imagen;
+  
   const _BackgroundImage({
-    Key? key,
+    Key? key,  this.url_imagen,
   }) : super(key: key);
 
   @override
@@ -134,11 +139,13 @@ class _BackgroundImage extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 400,
-        child: FadeInImage(
-          image: NetworkImage('https://via.placeholder.com/300x400'),
-          placeholder: AssetImage('assets/jar-loading.gif'),
-          fit: BoxFit.cover,
-        ),
+        child: (this.url_imagen != null)? 
+          FadeInImage(
+              image:  NetworkImage(this.url_imagen!),
+              placeholder: AssetImage('assets/jar-loading.gif'),
+              fit: BoxFit.contain,
+            ): 
+            Image(image: AssetImage('assets/no-image.png'), fit: BoxFit.contain,),
       ),
     );
   }
