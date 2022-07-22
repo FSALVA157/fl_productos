@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:fl_productos/services/services.dart';
+
 import 'package:fl_productos/themes/global_theme.dart';
 import 'package:fl_productos/ui/input_decorations.dart';
 import 'package:fl_productos/widgets/product_image.dart';
-import 'package:flutter/material.dart';
+import 'package:fl_productos/provider/product_form_provider.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class ProductScreen extends StatelessWidget {
@@ -13,7 +16,30 @@ class ProductScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productProvider = Provider.of<ProductsService>(context);
 
-    return  Scaffold(
+    return  ChangeNotifierProvider(
+        create: (_) => ProductFormProvider(productProvider.selectedProduct),
+        child: _productScreenBody(productProvider: productProvider),
+      );
+    
+       
+    
+  }
+}
+
+class _productScreenBody extends StatelessWidget {
+  const _productScreenBody({
+    Key? key,
+    required this.productProvider,
+  }) : super(key: key);
+
+  final ProductsService productProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    final formProvider = Provider.of<ProductFormProvider>(context);
+
+
+    return Scaffold(
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Column(
@@ -33,7 +59,8 @@ class ProductScreen extends StatelessWidget {
                   right: 20,
                   top: 60,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {                      
+                    },
                     icon: Icon(Icons.camera_alt_outlined, color: Colors.white,size: 40,)
                   )
                   )
@@ -47,7 +74,11 @@ class ProductScreen extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
-        onPressed: (){},
+        onPressed: ()async{
+          if(!formProvider.isValid()){return;}
+          await productProvider.saveOrCreateProduct(formProvider.producto);
+          
+        },
       ),
     );
   }
@@ -60,6 +91,9 @@ class _ProductForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _dataProductProvider = Provider.of<ProductFormProvider>(context);
+    final product = _dataProductProvider.producto;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
@@ -67,21 +101,46 @@ class _ProductForm extends StatelessWidget {
         width: double.infinity,
         decoration: _decorationForm(),
         child: Form(
+          key: _dataProductProvider.formKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             children: [
               SizedBox(height: 10,),
 
               TextFormField(
+                initialValue: product.name,
+                onChanged: (value) => {
+                  product.name = value
+                },
+                validator: (value){
+                    if(value == null || value.length < 2){
+                      return "El nombre el obligatorio";
+                    }else{
+                      return null;
+                    }
+                },
                 decoration: InputDecorations.authInputDecoration(
                   icono: Icons.text_fields,
                   hint_text: 'nombre del producto',
-                  label_text: 'Nombre:'
+                  label_text: 'Nombre:',                  
                   ),
               ),
 
               SizedBox(height: 30,),
 
               TextFormField(
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^(\d+)?\.?\d{0,2}'))
+                ],
+                initialValue: product.price.toString(),
+                onChanged: (value){
+                  if(double.tryParse(value)==null){
+                    product.price = 0;
+                  }else{
+                    product.price = double.parse(value);
+                  }              
+                
+                },
                 keyboardType: TextInputType.number,
                 decoration: InputDecorations.authInputDecoration(
                   icono: Icons.price_check_sharp,
@@ -91,10 +150,12 @@ class _ProductForm extends StatelessWidget {
               ),
               SizedBox(height:30,),
               SwitchListTile(
-                value: true,
+                value: product.available,
                 title: Text('Disponible'),
                 activeColor: GlobalTheme.primary,
-                onChanged: (value){}
+                onChanged: (value){
+                  _dataProductProvider.updateAvailable(value);
+                }
                  ),
 
               SizedBox(height: 30,)
