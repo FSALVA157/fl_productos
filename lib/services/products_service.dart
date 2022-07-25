@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+
 
 import 'package:flutter/material.dart';
 import  'package:http/http.dart'  as http;
@@ -13,6 +15,7 @@ class ProductsService extends ChangeNotifier{
   bool isLoading = true;
   bool isSaving = false;
   late IProduct selectedProduct;
+  File? newPictureFile;
 
   ProductsService(){
     this.loadProducts();
@@ -47,7 +50,7 @@ class ProductsService extends ChangeNotifier{
     notifyListeners();
 
     if(producto.id == null){
-      print('CREANDO UN PRODUCTO');
+      await createProduct(producto);
     }else{
         await updateProduct(producto);
     }
@@ -57,16 +60,38 @@ class ProductsService extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<String> createProduct(IProduct dataProduct)async{
+    final url = Uri.https(_base_url, "products/${dataProduct.id}.json");
+    final resp = await http.post(url, body: dataProduct.toJson());    
+    final decodedData = json.decode(resp.body);
+    //la respuesta de firebase viene en un objeto {'name': id}
+    dataProduct.id = decodedData['name'];
+    
+    //actualizando la lista
+    this.products.add(dataProduct);
+    // products[index] = dataProduct;
+
+    // return dataProduct.id!;
+    return dataProduct.id!;
+  }
+
   Future<String> updateProduct(IProduct dataProduct)async{
     final url = Uri.https(_base_url, "products/${dataProduct.id}.json");
     final resp = await http.put(url, body: dataProduct.toJson());    
     final decodedData = resp.body;
-    print(decodedData);
+    
+    //actualizando la lista
+    final index = this.products.indexWhere((element) => element.id == dataProduct.id);
+    products[index] = dataProduct;
 
     return dataProduct.id!;
   }
 
-
+  void updateSelectedProductImage(String path){
+    this.selectedProduct.picture = path;
+    this.newPictureFile = File.fromUri(Uri(path: path));
+    notifyListeners();
+  }
 
 
 }
